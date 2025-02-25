@@ -28,26 +28,15 @@ pub extern "C" fn initialize(
     beacon_printf: BeaconPrintfFn,
 ) {
     // Pass the fn pointers to the Beacon wrapper
-    let beacon = Beacon {
-        output: beacon_output,
-        format_alloc: beacon_format_alloc,
-        format_free: beacon_format_free,
-        printf: beacon_printf,
-    };
-    // Allocate Format Buffer
-    let mut buffer = FormatP {
-        original: core::ptr::null_mut(),
-        buffer: core::ptr::null_mut(),
-        length: 0,
-        size: 0,
-    };
-    beacon.alloc(&mut buffer, 16 * 1024);
+    let mut beacon = Beacon::new(
+        beacon_output,
+        beacon_format_alloc,
+        beacon_format_free,
+        beacon_printf,
+    );
 
     // Call rust_bof
-    rust_bof(&beacon);
-
-    // Cleanup
-    beacon.free(&mut buffer);
+    rust_bof(&mut beacon);
 }
 
 #[panic_handler]
