@@ -9,7 +9,7 @@ use core::i128;
 mod rust_bof;
 use rust_bof::rust_bof;
 mod beacon;
-use beacon::{Beacon, BeaconFormatAllocFn, BeaconFormatFreeFn, BeaconOutputFn, BeaconPrintfFn};
+use beacon::*;
 #[repr(C, align(8))]
 struct FormatP {
     original: *mut c_char,
@@ -26,6 +26,10 @@ pub extern "C" fn initialize(
     beacon_format_alloc: BeaconFormatAllocFn,
     beacon_format_free: BeaconFormatFreeFn,
     beacon_printf: BeaconPrintfFn,
+    get_spawn_to: BeaconGetSpawnToFn,
+    inject_process: BeaconInjectProcessFn,
+    inject_temporary_process: BeaconInjectTemporaryProcessFn,
+    cleanup_process: BeaconCleanupProcessFn,
 ) {
     // Pass the fn pointers to the Beacon wrapper
     let mut beacon = Beacon::new(
@@ -33,6 +37,10 @@ pub extern "C" fn initialize(
         beacon_format_alloc,
         beacon_format_free,
         beacon_printf,
+        get_spawn_to,
+        inject_process,
+        inject_temporary_process,
+        cleanup_process,
     );
 
     // Call rust_bof
