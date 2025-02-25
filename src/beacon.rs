@@ -23,9 +23,35 @@ pub enum BeaconOutputType {
 }
 
 impl Beacon {
-    pub fn alloc(&self, buffer: &mut FormatP, size: c_int) {
+    pub fn new(
+        output: BeaconOutputFn,
+        format_alloc: BeaconFormatAllocFn,
+        format_free: BeaconFormatFreeFn,
+        printf: BeaconPrintfFn,
+    ) -> Self {
+        let mut beacon = Self {
+            output,
+            format_alloc,
+            format_free,
+            printf,
+            buffer: FormatP {
+                original: core::ptr::null_mut(),
+                buffer: core::ptr::null_mut(),
+                length: 0,
+                size: 0,
+            },
+        };
+
+        // Initialize the buffer
         unsafe {
-            (self.format_alloc)(buffer, size);
+            (beacon.format_alloc)(&mut beacon.buffer, 16 * 1024);
+        }
+
+        beacon
+    }
+    pub fn alloc(&mut self, size: c_int) {
+        unsafe {
+            (self.format_alloc)(&mut self.buffer, size);
         }
     }
 
@@ -39,13 +65,22 @@ impl Beacon {
         }
     }
 
-    pub fn free(&self, buffer: &mut FormatP) {
+    pub fn free(&mut self) {
         unsafe {
-            (self.format_free)(buffer);
+            (self.format_free)(&mut self.buffer);
         }
     }
 
-    pub fn printf(&self, msg: &str) {
-        unsafe { (self.printf)(0, msg.as_ptr() as *const c_char) }
+    pub fn printf(&mut self, msg: &str) {
+        unsafe {
+            (self.printf)(0, msg.as_ptr() as *const c_char);
+        }
     }
 }
+
+impl Drop for Beacon {
+    fn drop(&mut self) {
+        self.free();
+    }
+}
+
