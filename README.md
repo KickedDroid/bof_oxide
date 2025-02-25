@@ -1,6 +1,6 @@
 # bof_oxide
 
-A POC or Template whatever for developing BOFs for Sliver, Havoc, Cobalt Strike or most COFFLoaders. ( heavy construstion )
+A POC or Template whatever for developing BOFs for Sliver, Havoc, Cobalt Strike or most COFFLoaders. 
 
 ### Build
 ```
