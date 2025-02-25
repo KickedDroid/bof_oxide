@@ -1,5 +1,7 @@
 #!/bin/bash
-
+if [ ! -d "objects" ]; then
+    mkdir objects
+fi
 
 RUSTFLAGS="-C target-cpu=x86-64 -C target-feature=+crt-static -C link-arg=-nostartfiles -C link-arg=-nodefaultlibs -C link-arg=-Wl,--gc-sections" \
 rustc --target x86_64-pc-windows-gnu \
