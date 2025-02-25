@@ -23,7 +23,9 @@ pub fn rust_bof(beacon: &mut Beacon) {
 }
 ```
 
-![image](https://github.com/user-attachments/assets/5d62446c-a2a1-4fa0-9e37-37fd03fd7975)
+Running in Sliver
+
+![image](https://github.com/user-attachments/assets/b993d6e7-1914-40f8-9d1b-a8ec7f8bc6b9)
 
 
 ### How it works
