@@ -6,6 +6,7 @@
 extern "C" {
 #endif // __cplusplus
 
+#ifdef DATA
 /* data API */
 typedef struct {
 	char * original; /* the original buffer [so we can free it] */
@@ -20,7 +21,7 @@ DECLSPEC_IMPORT int     BeaconDataInt(datap * parser);
 DECLSPEC_IMPORT short   BeaconDataShort(datap * parser);
 DECLSPEC_IMPORT int     BeaconDataLength(datap * parser);
 DECLSPEC_IMPORT char *  BeaconDataExtract(datap * parser, int * size);
-
+#endif
 /* format API */
 typedef struct {
 	char * original; /* the original buffer [so we can free it] */
@@ -29,6 +30,8 @@ typedef struct {
 	int    size;     /* total size of this buffer */
 } formatp;
 
+
+#ifdef FORMAT
 DECLSPEC_IMPORT void    BeaconFormatAlloc(formatp * format, int maxsz);
 DECLSPEC_IMPORT void    BeaconFormatReset(formatp * format);
 DECLSPEC_IMPORT void    BeaconFormatAppend(formatp * format, const char * text, int len);
@@ -36,6 +39,7 @@ DECLSPEC_IMPORT void    BeaconFormatPrintf(formatp * format, const char * fmt, .
 DECLSPEC_IMPORT char *  BeaconFormatToString(formatp * format, int * size);
 DECLSPEC_IMPORT void    BeaconFormatFree(formatp * format);
 DECLSPEC_IMPORT void    BeaconFormatInt(formatp * format, int value);
+#endif
 
 /* Output Functions */
 #define CALLBACK_OUTPUT      0x0
@@ -45,22 +49,28 @@ DECLSPEC_IMPORT void    BeaconFormatInt(formatp * format, int value);
 #define CALLBACK_CUSTOM      0x1000
 #define CALLBACK_CUSTOM_LAST 0x13ff
 
-
+#ifdef OUTPUT
 DECLSPEC_IMPORT void   BeaconOutput(int type, const char * data, int len);
 DECLSPEC_IMPORT void   BeaconPrintf(int type, const char * fmt, ...);
+#endif
 
-
-/* Token Functions */
-DECLSPEC_IMPORT BOOL   BeaconUseToken(HANDLE token);
-DECLSPEC_IMPORT void   BeaconRevertToken();
-DECLSPEC_IMPORT BOOL   BeaconIsAdmin();
-
+#ifdef process_injection
 /* Spawn+Inject Functions */
 DECLSPEC_IMPORT void   BeaconGetSpawnTo(BOOL x86, char * buffer, int length);
 DECLSPEC_IMPORT void   BeaconInjectProcess(HANDLE hProc, int pid, char * payload, int p_len, int p_offset, char * arg, int a_len);
 DECLSPEC_IMPORT void   BeaconInjectTemporaryProcess(PROCESS_INFORMATION * pInfo, char * payload, int p_len, int p_offset, char * arg, int a_len);
 DECLSPEC_IMPORT BOOL   BeaconSpawnTemporaryProcess(BOOL x86, BOOL ignoreToken, STARTUPINFO * si, PROCESS_INFORMATION * pInfo);
 DECLSPEC_IMPORT void   BeaconCleanupProcess(PROCESS_INFORMATION * pInfo);
+#endif
+
+
+#ifdef TOKEN
+/* Token Functions */
+DECLSPEC_IMPORT BOOL   BeaconUseToken(HANDLE token);
+DECLSPEC_IMPORT void   BeaconRevertToken();
+DECLSPEC_IMPORT BOOL   BeaconIsAdmin();
+#endif
+
 
 /* Utility Functions */
 DECLSPEC_IMPORT BOOL   toWideChar(char * src, wchar_t * dst, int max);
@@ -70,6 +80,7 @@ DECLSPEC_IMPORT BOOL   toWideChar(char * src, wchar_t * dst, int max);
  *  ptr  - pointer to the base address of the allocated memory.
  *  size - the number of bytes allocated for the ptr.
  */
+
 typedef struct {
 	char * ptr;
 	size_t size;
@@ -285,6 +296,7 @@ typedef struct
  * Required to support the following system calls:
  *    ntCreateFile
  */
+#ifdef RTL
 typedef struct
 {
 	PVOID rtlDosPathNameToNtPathNameUWithStatusAddr;
@@ -318,17 +330,20 @@ DECLSPEC_IMPORT BOOL BeaconDuplicateHandle(HANDLE hSourceProcessHandle, HANDLE h
 DECLSPEC_IMPORT BOOL BeaconReadProcessMemory(HANDLE hProcess, LPCVOID lpBaseAddress, LPVOID lpBuffer, SIZE_T nSize, SIZE_T *lpNumberOfBytesRead);
 DECLSPEC_IMPORT BOOL BeaconWriteProcessMemory(HANDLE hProcess, LPVOID lpBaseAddress, LPCVOID lpBuffer, SIZE_T nSize, SIZE_T *lpNumberOfBytesWritten);
 
+#endif 
+
+#ifdef BEACON_GATE_API
 /* Beacon Gate APIs */
 DECLSPEC_IMPORT VOID BeaconDisableBeaconGate();
 DECLSPEC_IMPORT VOID BeaconEnableBeaconGate();
-
+#endif
 /* Beacon User Data
  *
  * version format: 0xMMmmPP, where MM = Major, mm = Minor, and PP = Patch
  * e.g. 0x040900 -> CS 4.9
  *      0x041000 -> CS 4.10
 */
-
+#ifdef BEACON_USER_DATA
 #define DLL_BEACON_USER_DATA 0x0d
 #define BEACON_USER_DATA_CUSTOM_SIZE 32
 typedef struct
@@ -339,6 +354,7 @@ typedef struct
 	PRTL_API     rtls;
 	PALLOCATED_MEMORY allocatedMemory;
 } USER_DATA, * PUSER_DATA;
+#endif
 
 #ifdef __cplusplus
 }
