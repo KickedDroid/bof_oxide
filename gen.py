@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+
+# this is just a placeholder build script made by claude it's likely to be replaced or changed in the future, I'm doing everything
+# in my power to avoid CMAKE lmao
+
 import os
 import sys
 import subprocess
