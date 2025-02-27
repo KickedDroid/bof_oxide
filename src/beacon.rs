@@ -3,12 +3,13 @@ use core::ffi::{c_char, c_int, c_uint, c_void};
 
 // Beacon Fn types
 pub type BeaconOutputFn = unsafe extern "C" fn(c_int, *const c_char, c_int);
-pub type BeaconFormatAllocFn = unsafe extern "C" fn(*mut FormatP, c_int);
-pub type BeaconFormatFreeFn = unsafe extern "C" fn(*mut FormatP);
 pub type BeaconPrintfFn = unsafe extern "C" fn(c_int, *const c_char, ...);
 
+#[cfg(feature = "format")]
+pub type BeaconFormatAllocFn = unsafe extern "C" fn(*mut FormatP, c_int);
+#[cfg(feature = "format")]
+pub type BeaconFormatFreeFn = unsafe extern "C" fn(*mut FormatP);
 // Windows-specific types
-
 #[cfg(feature = "process_injection")]
 type HANDLE = *mut c_void;
 #[cfg(feature = "process_injection")]
@@ -69,7 +70,9 @@ pub struct BeaconDataFunctions {
 
 pub struct Beacon {
     output: BeaconOutputFn,
+    #[cfg(feature = "format")]
     format_alloc: BeaconFormatAllocFn,
+    #[cfg(feature = "format")]
     format_free: BeaconFormatFreeFn,
     pub printf: BeaconPrintfFn,
     buffer: FormatP,

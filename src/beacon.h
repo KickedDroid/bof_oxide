@@ -54,7 +54,7 @@ DECLSPEC_IMPORT void   BeaconOutput(int type, const char * data, int len);
 DECLSPEC_IMPORT void   BeaconPrintf(int type, const char * fmt, ...);
 #endif
 
-#ifdef process_injection
+#ifdef PROCESS_INJECTION
 /* Spawn+Inject Functions */
 DECLSPEC_IMPORT void   BeaconGetSpawnTo(BOOL x86, char * buffer, int length);
 DECLSPEC_IMPORT void   BeaconInjectProcess(HANDLE hProc, int pid, char * payload, int p_len, int p_offset, char * arg, int a_len);

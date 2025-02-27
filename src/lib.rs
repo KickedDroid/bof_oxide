@@ -22,9 +22,10 @@ struct FormatP {
 #[no_mangle]
 pub extern "C" fn initialize(
     beacon_output: BeaconOutputFn,
-    beacon_format_alloc: BeaconFormatAllocFn,
-    beacon_format_free: BeaconFormatFreeFn,
     beacon_printf: BeaconPrintfFn,
+
+    #[cfg(feature = "format")] beacon_format_alloc: BeaconFormatAllocFn,
+    #[cfg(feature = "format")] beacon_format_free: BeaconFormatFreeFn,
     #[cfg(feature = "process_injection")] get_spawn_to: BeaconGetSpawnToFn,
     #[cfg(feature = "process_injection")] inject_process: BeaconInjectProcessFn,
     #[cfg(feature = "process_injection")] inject_temporary_process: BeaconInjectTemporaryProcessFn,

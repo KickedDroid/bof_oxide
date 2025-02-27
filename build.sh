@@ -5,12 +5,13 @@ fi
 
 
 FEATURES=""
-
+C_FEATURES="-DDATA"
 # Add features based on args
 for feature in "$@"; do
   FEATURES="$FEATURES --cfg feature=\"$feature\""
 done
 
+echo $C_FEATURES
 
 RUSTFLAGS="-C target-cpu=x86-64 -C target-feature=+crt-static -C link-arg=-nostartfiles -C link-arg=-nodefaultlibs -C link-arg=-Wl,--gc-sections" \
 rustc --target x86_64-pc-windows-gnu \
@@ -24,7 +25,7 @@ rustc --target x86_64-pc-windows-gnu \
     --emit=obj \
     src/lib.rs -o objects/rust_part.o
 
-x86_64-w64-mingw32-gcc -c -DOUTPUT -DFORMAT src/entry.c -o objects/c_part.o
+x86_64-w64-mingw32-gcc -c -DOUTPUT -DFORMAT $C_FEATURES src/entry.c -o objects/c_part.o
 
 x86_64-w64-mingw32-ld -r objects/rust_part.o objects/c_part.o -o objects/combined.o
 

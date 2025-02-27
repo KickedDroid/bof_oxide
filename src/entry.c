@@ -5,11 +5,13 @@
 extern void initialize(
     #ifdef OUT
     void (*beacon_output)(int, const char*, int),
-    void (*beacon_format_alloc)(formatp*, int),
-    void (*beacon_format_free)(formatp*),
     void (*beacon_printf)(int, const char * fmt, ...),
     #endif
-
+    
+    #ifdef FORMAT 
+    void (*beacon_format_alloc)(formatp*, int),
+    void (*beacon_format_free)(formatp*),
+    #endif
     #ifdef PROCESS_INJECTION
     void (*beacon_get_spawn_to)(BOOL, char*, int),
     void (*beacon_inject_process)(HANDLE, int, char*, int, int, char*, int),
