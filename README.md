@@ -4,7 +4,14 @@ A POC or Template whatever for developing BOFs for Sliver, Havoc, Cobalt Strike 
 
 ### Build
 ```
+# Include the Basic BeaconFormat funcs
 ./gen.py format
+
+# BeaconData funcs
+./gen.py data
+
+# Using all features
+./gen.py data process_injection format
 ```
 
 
