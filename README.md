@@ -4,7 +4,7 @@ A POC or Template whatever for developing BOFs for Sliver, Havoc, Cobalt Strike 
 
 ### Build
 ```
-./build.sh
+./gen.py format
 ```
 
 
