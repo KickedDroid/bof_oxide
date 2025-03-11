@@ -20,7 +20,7 @@ struct FormatP {
 // This is the Entrypoint for the Rust portion
 // Initialize and call rust_bof
 #[no_mangle]
-pub extern "C" fn initialize(
+pub unsafe extern "C" fn initialize(
     beacon_output: BeaconOutputFn,
     beacon_printf: BeaconPrintfFn,
 

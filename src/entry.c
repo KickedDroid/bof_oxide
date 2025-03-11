@@ -4,7 +4,7 @@
 // Extern Rust initialize fn
 extern void initialize(
     #ifdef OUT
-    void (*beacon_output)(int, const char*, int),
+    void (*beacon_output)(int, const char *, int),
     void (*beacon_printf)(int, const char * fmt, ...),
     #endif
     
@@ -36,10 +36,13 @@ void go(char* args, int alen) {
     initialize(
         #ifdef OUT
         BeaconOutput, 
-        BeaconFormatAlloc, 
-        BeaconFormatFree, 
         BeaconPrintf,
         #endif 
+        
+        #ifdef FORMAT
+        BeaconFormatAlloc, 
+        BeaconFormatFree, 
+        #endif
 
         #ifdef PROCESS_INJECTION
         BeaconGetSpawnTo,
