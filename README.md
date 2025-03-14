@@ -2,6 +2,16 @@
 
 A POC or Template whatever for developing BOFs for Sliver, Havoc, Cobalt Strike or most COFFLoaders. 
 
+Goals:
+- Less Volitile BOFs
+- Make Debugging BOFs less of a pain.
+- Better Error Handling 
+
+TODO: 
+- Full Beacon API Support
+- Dynamic Beacon API fn names ( Compile time )
+
+ 
 ### Build
 ```
 # Include the Basic BeaconFormat funcs
