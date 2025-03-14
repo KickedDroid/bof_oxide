@@ -129,3 +129,7 @@ AUX scnlen 0x1d nreloc 0 nlnno 0
 ### References 
 
 Header file `beacon.h` from https://github.com/Cobalt-Strike/bof_template/blob/main/beacon.h
+
+
+### FAFO License
+This is striclty for educational and research purposes. I'm not responsible for any use of this, by any means. Use at you're own risk and find out. NOTE: This probs will get you picked up immediately so good luck. 
