@@ -5,7 +5,7 @@ use core::arch::asm;
 use Data;
 // This will be the main file we edit to write out BOFs.
 pub fn rust_bof(beacon: &mut Beacon, data: &mut Data) {
-    #[cfg(feature = "data")]
+    
     let str_arg = data.extract_str();
     if str_arg.is_null() {
         beacon.output(
@@ -14,7 +14,6 @@ pub fn rust_bof(beacon: &mut Beacon, data: &mut Data) {
         );
         return;
     }
-    #[cfg(feature = "data")]
     data.free();
 
     unsafe {
@@ -24,15 +23,7 @@ pub fn rust_bof(beacon: &mut Beacon, data: &mut Data) {
             str_arg,
         );
     }
-    // BeaconOutput is a buffer we can add to
-    /* beacon.output(
-        BeaconOutputType::Error,
-        "[!] Uh oh error 123\n",
-    );
-    beacon.output(
-        BeaconOutputType::Utf8,
-        "[+] Testing 123\n",
-    ); */
+    
     beacon.output(
         BeaconOutputType::Standard,
         "[+] Rust BOF Completed successfully",

@@ -29,13 +29,29 @@ TODO:
 # Usage Example
 
 ```rust
-pub fn rust_bof(beacon: &mut Beacon) {
-    beacon.printf("[+] Running Rust BOF...\n\n\0");
-    beacon.printf("   This is where you can write your own custom functionality\n\n\0");
+pub fn rust_bof(beacon: &mut Beacon, data: &mut Data) {
+    
+    let str_arg = data.extract_str();
+    if str_arg.is_null() {
+        beacon.output(
+            BeaconOutputType::Error,
+            "[!] Str_arg argument is required\n",
+        );
+        return;
+    }
+    data.free();
 
+    unsafe {
+        (beacon.printf)(
+            0,
+            "Running with arg: Hello %s from rust-bof\n\n\0".as_ptr() as *const c_char,
+            str_arg,
+        );
+    }
+    
     beacon.output(
         BeaconOutputType::Standard,
-        "[+] Rust BOF Completed successfully\0",
+        "[+] Rust BOF Completed successfully",
     );
 }
 ```
