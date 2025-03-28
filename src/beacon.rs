@@ -127,9 +127,14 @@ impl Beacon {
             );
         }
     }
+    pub fn printf(&mut self, mut msg: &str, arg: *const c_char) {
+        unsafe {
+            (self.printf)(0, msg.as_ptr() as *const c_char, arg);
+        }
+    }
 
 
-    pub fn printf(&mut self, mut msg: &str) {
+    pub fn print(&mut self, mut msg: &str) {
         unsafe {
             (self.printf)(0, msg.as_ptr() as *const c_char);
         }

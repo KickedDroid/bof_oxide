@@ -16,13 +16,8 @@ pub fn rust_bof(beacon: &mut Beacon, data: &mut Data) {
     }
     data.free();
 
-    unsafe {
-        (beacon.printf)(
-            0,
-            "Hello %s from rust-bof\n\n\0".as_ptr() as *const c_char,
-            str_arg,
-        );
-    }
+    
+    beacon.printf("Hello %s from rust-bof\0", str_arg);
     
     beacon.output(
         BeaconOutputType::Standard,
