@@ -44,7 +44,7 @@ pub fn rust_bof(beacon: &mut Beacon, data: &mut Data) {
     unsafe {
         (beacon.printf)(
             0,
-            "Running with arg: Hello %s from rust-bof\n\n\0".as_ptr() as *const c_char,
+            "Hello %s from rust-bof\n\n\0".as_ptr() as *const c_char,
             str_arg,
         );
     }
@@ -55,6 +55,20 @@ pub fn rust_bof(beacon: &mut Beacon, data: &mut Data) {
     );
 }
 ```
+Running the bof above with https://github.com/hakaioffsec/coffee
+
+```
+.\coffee-gnu.exe --bof-path .\test.o -- str:"World"
+Hello World from rust-bof
+
+
+[+] Rust BOF Completed successfully
+
+// Terminate Gracefully
+.\coffee-gnu.exe --bof-path .\test.o --
+[!] Str_arg argument is required
+```
+
 
 Running in Sliver
 
