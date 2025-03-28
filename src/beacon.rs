@@ -1,6 +1,5 @@
 use crate::FormatP;
 use core::ffi::{c_char, c_int, c_uint, c_void};
-
 // Beacon Fn types
 pub type BeaconOutputFn = unsafe extern "C" fn(c_int, *const c_char, c_int);
 pub type BeaconPrintfFn = unsafe extern "C" fn(c_int, *const c_char, ...);
@@ -70,16 +69,9 @@ pub struct BeaconDataFunctions {
 
 pub struct Beacon {
     output: BeaconOutputFn,
-    #[cfg(feature = "format")]
-    format_alloc: BeaconFormatAllocFn,
-    #[cfg(feature = "format")]
-    format_free: BeaconFormatFreeFn,
     pub printf: BeaconPrintfFn,
-    buffer: FormatP,
     #[cfg(feature = "process_injection")]
     pub injection: BeaconInjectionFunctions,
-    #[cfg(feature = "data")]
-    pub data: BeaconDataFunctions,
 }
 
 #[repr(C)]
@@ -101,30 +93,19 @@ pub struct DataP {
 impl Beacon {
     pub fn new(
         output: BeaconOutputFn,
-        format_alloc: BeaconFormatAllocFn,
-        format_free: BeaconFormatFreeFn,
         printf: BeaconPrintfFn,
         #[cfg(feature = "process_injection")] get_spawn_to: BeaconGetSpawnToFn,
         #[cfg(feature = "process_injection")] inject_process: BeaconInjectProcessFn,
         #[cfg(feature = "process_injection")]
         inject_temporary_process: BeaconInjectTemporaryProcessFn,
         #[cfg(feature = "process_injection")] cleanup_process: BeaconCleanupProcessFn,
-        #[cfg(feature = "data")] data: BeaconDataFunctions,
         // Arguments from Beacon
         args: *mut c_char,
         alen: c_int,
     ) -> Self {
         let mut beacon = Self {
             output,
-            format_alloc,
-            format_free,
             printf,
-            buffer: FormatP {
-                original: core::ptr::null_mut(),
-                buffer: core::ptr::null_mut(),
-                length: 0,
-                size: 0,
-            },
             #[cfg(feature = "process_injection")]
             injection: BeaconInjectionFunctions {
                 get_spawn_to,
@@ -132,22 +113,10 @@ impl Beacon {
                 inject_temporary_process,
                 cleanup_process,
             },
-            #[cfg(feature = "data")]
-            data,
         };
-
-        // Initialize the buffer
-        unsafe {
-            (beacon.format_alloc)(&mut beacon.buffer, 16 * 1024);
-        }
-
         beacon
     }
-    pub fn alloc(&mut self, size: c_int) {
-        unsafe {
-            (self.format_alloc)(&mut self.buffer, size);
-        }
-    }
+    
 
     pub fn output(&self, out_type: BeaconOutputType, msg: &str) {
         unsafe {
@@ -159,87 +128,11 @@ impl Beacon {
         }
     }
 
-    pub fn free(&mut self) {
-        unsafe {
-            (self.format_free)(&mut self.buffer);
-        }
-    }
 
-    pub fn printf(&mut self, msg: &str) {
+    pub fn printf(&mut self, mut msg: &str) {
         unsafe {
             (self.printf)(0, msg.as_ptr() as *const c_char);
         }
     }
-    #[cfg(feature = "data")]
-    pub fn parse_data(&mut self, mut parser: DataP) {
-        unsafe {
-            let mut size: c_int = 0;
-            let str_arg = (self.data.extract)(&mut parser, &mut size);
-            if str_arg.is_null() {
-                self.printf("[!] Running with no arguments\n\0");
-            } else {
-                (self.printf)(
-                    0,
-                    "[+] Running with args: %s\n\0".as_ptr() as *const c_char,
-                    str_arg,
-                );
-            }
-        };
-    }
-    #[cfg(feature = "data")]
-    pub fn parse_args(&self, args: *mut c_char, args_len: c_int) -> DataP {
-        let mut parser = DataP {
-            original: core::ptr::null_mut(),
-            buffer: core::ptr::null_mut(),
-            length: 0,
-            size: 0,
-        };
-
-        unsafe {
-            (self.data.parse)(&mut parser, args, args_len);
-        }
-
-        parser
-    }
-    #[cfg(feature = "data")]
-    pub fn get_int(&self, parser: &mut DataP) -> c_int {
-        unsafe { (self.data.get_int)(parser) }
-    }
-    #[cfg(feature = "data")]
-    pub fn get_short(&self, parser: &mut DataP) -> i16 {
-        unsafe { (self.data.get_short)(parser) }
-    }
-    #[cfg(feature = "data")]
-    pub fn get_string(&self, parser: &mut DataP) -> &'static str {
-        unsafe {
-            let mut size: c_int = 0;
-            let ptr = (self.data.extract)(parser, &mut size);
-
-            if ptr.is_null() || size == 0 {
-                return "";
-            }
-
-            let slice = core::slice::from_raw_parts(ptr as *const u8, size as usize);
-            core::str::from_utf8_unchecked(slice)
-        }
-    }
-    #[cfg(feature = "data")]
-    pub fn get_binary(&self, parser: &mut DataP) -> &'static [u8] {
-        unsafe {
-            let mut size: c_int = 0;
-            let ptr = (self.data.extract)(parser, &mut size);
-
-            if ptr.is_null() || size == 0 {
-                return &[];
-            }
-
-            core::slice::from_raw_parts(ptr as *const u8, size as usize)
-        }
-    }
 }
 
-impl Drop for Beacon {
-    fn drop(&mut self) {
-        self.free();
-    }
-}

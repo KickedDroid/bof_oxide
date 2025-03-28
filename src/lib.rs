@@ -8,7 +8,9 @@ use core::i128;
 mod rust_bof;
 use rust_bof::rust_bof;
 mod beacon;
+mod data;
 use beacon::*;
+use data::Data;
 #[repr(C, align(8))]
 struct FormatP {
     original: *mut c_char,
@@ -51,8 +53,6 @@ pub unsafe extern "C" fn initialize(
     // Pass the fn pointers to the Beacon wrapper
     let mut beacon = Beacon::new(
         beacon_output,
-        beacon_format_alloc,
-        beacon_format_free,
         beacon_printf,
         #[cfg(feature = "process_injection")]
         get_spawn_to,
@@ -62,16 +62,42 @@ pub unsafe extern "C" fn initialize(
         inject_temporary_process,
         #[cfg(feature = "process_injection")]
         cleanup_process,
-        #[cfg(feature = "data")]
-        data,
         args,
         alen,
     );
 
     #[cfg(feature = "data")]
-    let data = beacon.parse_args(args, alen);
+    let mut data = Data::new(
+        beacon_format_alloc,
+        beacon_format_free,
+        beacon_data_parse,
+        beacon_data_int,
+        beacon_data_short,
+        beacon_data_length,
+        beacon_data_extract,
+        args,
+        alen,
+    );
     #[cfg(feature = "data")]
-    beacon.parse_data(data);
+    let str_arg = data.extract_str();
+    if str_arg.is_null() {
+        beacon.output(
+            BeaconOutputType::Error,
+            "[!] Str_arg argument is required\n",
+        );
+        return;
+    }
+    #[cfg(feature = "data")]
+    data.free();
+
+    unsafe {
+        (beacon.printf)(
+            0,
+            "Running with arg: Hello %s from rust-bof\n\n\0".as_ptr() as *const c_char,
+            str_arg,
+        );
+    }
+
     // Call rust_bof
     rust_bof(&mut beacon);
 
