@@ -2,6 +2,16 @@
 
 A POC or Template whatever for developing BOFs for Sliver, Havoc, Cobalt Strike or most COFFLoaders. 
 
+Goals:
+- Less Volitile BOFs
+- Make Debugging BOFs less of a pain.
+- Better Error Handling 
+
+TODO: 
+- Full Beacon API Support
+- Dynamic Beacon API fn names ( Compile time )
+
+ 
 ### Build
 ```
 # Include the Basic BeaconFormat funcs
@@ -119,3 +129,7 @@ AUX scnlen 0x1d nreloc 0 nlnno 0
 ### References 
 
 Header file `beacon.h` from https://github.com/Cobalt-Strike/bof_template/blob/main/beacon.h
+
+
+### FAFO License
+This is striclty for educational and research purposes. I'm not responsible for any use of this, by any means. Use at you're own risk and find out. NOTE: This probs will get you picked up immediately so good luck. 
