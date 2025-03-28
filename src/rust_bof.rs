@@ -2,9 +2,28 @@ use crate::{Beacon, FormatP};
 use beacon::BeaconOutputType;
 use core::ffi::c_char;
 use core::arch::asm;
+use Data;
 // This will be the main file we edit to write out BOFs.
-pub fn rust_bof(beacon: &mut Beacon) {
-    
+pub fn rust_bof(beacon: &mut Beacon, data: &mut Data) {
+    #[cfg(feature = "data")]
+    let str_arg = data.extract_str();
+    if str_arg.is_null() {
+        beacon.output(
+            BeaconOutputType::Error,
+            "[!] Str_arg argument is required\n",
+        );
+        return;
+    }
+    #[cfg(feature = "data")]
+    data.free();
+
+    unsafe {
+        (beacon.printf)(
+            0,
+            "Running with arg: Hello %s from rust-bof\n\n\0".as_ptr() as *const c_char,
+            str_arg,
+        );
+    }
     // BeaconOutput is a buffer we can add to
     /* beacon.output(
         BeaconOutputType::Error,

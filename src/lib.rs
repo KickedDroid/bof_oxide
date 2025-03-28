@@ -78,28 +78,10 @@ pub unsafe extern "C" fn initialize(
         args,
         alen,
     );
-    #[cfg(feature = "data")]
-    let str_arg = data.extract_str();
-    if str_arg.is_null() {
-        beacon.output(
-            BeaconOutputType::Error,
-            "[!] Str_arg argument is required\n",
-        );
-        return;
-    }
-    #[cfg(feature = "data")]
-    data.free();
-
-    unsafe {
-        (beacon.printf)(
-            0,
-            "Running with arg: Hello %s from rust-bof\n\n\0".as_ptr() as *const c_char,
-            str_arg,
-        );
-    }
+    
 
     // Call rust_bof
-    rust_bof(&mut beacon);
+    rust_bof(&mut beacon,&mut data);
 
     drop(beacon);
 }
