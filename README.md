@@ -63,8 +63,10 @@ Hello World from rust-bof
 
 
 [+] Rust BOF Completed successfully
+```
 
-// Terminate Gracefully
+```
+# Terminate Gracefully
 .\coffee-gnu.exe --bof-path .\test.o --
 [!] Str_arg argument is required
 ```
