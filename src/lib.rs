@@ -1,10 +1,9 @@
 #![no_main]
-#![no_std]
 #![allow(non_upper_case_globals)]
-use core::ffi::c_char;
-use core::ffi::c_int;
-use core::ffi::c_void;
-use core::i128;
+use std::ffi::c_char;
+use std::ffi::c_int;
+use std::ffi::c_void;
+use std::i128;
 mod rust_bof;
 use rust_bof::rust_bof;
 mod beacon;
@@ -86,8 +85,8 @@ pub unsafe extern "C" fn initialize(
     drop(beacon);
 }
 
-#[panic_handler]
+/* #[panic_handler]
 #[no_mangle]
-fn panic(_: &core::panic::PanicInfo) -> ! {
+fn panic(_: &std::panic::PanicInfo) -> ! {
     loop {}
-}
+} */

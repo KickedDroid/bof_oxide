@@ -1,5 +1,5 @@
 use crate::FormatP;
-use core::ffi::{c_char, c_int, c_uint, c_void};
+use std::ffi::{c_char, c_int, c_uint, c_void};
 // Beacon Fn types
 pub type BeaconOutputFn = unsafe extern "C" fn(c_int, *const c_char, c_int);
 pub type BeaconPrintfFn = unsafe extern "C" fn(c_int, *const c_char, ...);

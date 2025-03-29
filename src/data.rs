@@ -8,7 +8,8 @@ use BeaconFormatAllocFn;
 use BeaconFormatFreeFn;
 use FormatP;
 use DataP;
-use c_char;use core::ptr;
+use c_char;
+use std::ptr;
 
 
 pub struct Data {
@@ -38,19 +39,22 @@ impl Data {
         alen: c_int,
     ) -> Self {
         let mut buffer = FormatP {
-            original: core::ptr::null_mut(),
-            buffer: core::ptr::null_mut(),
+            original: std::ptr::null_mut(),
+            buffer: std::ptr::null_mut(),
             length: 0,
             size: 0,
         };
         let mut parser = DataP {
-            original: core::ptr::null_mut(),
-            buffer: core::ptr::null_mut(),
+            original: std::ptr::null_mut(),
+            buffer: std::ptr::null_mut(),
             length: 0,
             size: 0,
         };
         unsafe {
             (beacon_format_alloc)(&mut buffer, 256);
+        }
+        unsafe {
+            (beacon_data_parse)(&mut parser, args, alen);
         }
 
         Data {
@@ -72,20 +76,11 @@ impl Data {
     }
 
     pub fn extract_str(&mut self) -> *const c_char {
-        let mut parser = DataP {
-            original: core::ptr::null_mut(),
-            buffer: core::ptr::null_mut(),
-            length: 0,
-            size: 0,
-        };
-        unsafe {
-            (self.beacon_data_parse)(&mut parser, self.args, self.alen);
-        }
 
         let ip = unsafe {
             let mut size: c_int = 0;
 
-            let str_arg = (self.beacon_data_extract)(&mut parser, &mut size);
+            let str_arg = (self.beacon_data_extract)(&mut self.parser, &mut size);
 
             str_arg
         };
@@ -96,11 +91,12 @@ impl Data {
 
     pub fn extract_int(&mut self) -> c_int {
         let mut parser = DataP {
-            original: core::ptr::null_mut(),
-            buffer: core::ptr::null_mut(),
+            original: std::ptr::null_mut(),
+            buffer: std::ptr::null_mut(),
             length: 0,
             size: 0,
         };
+        
         let mut size: c_int = 0;
 
         let int = unsafe {
@@ -128,7 +124,7 @@ pub fn c_char_to_u8(ptr: *const u8) -> &'static [u8] {
     let len = unsafe { c_strlen(ptr as *const i8) };
 
     // Read the string from the pointer
-    let slice = unsafe { core::slice::from_raw_parts(ptr, len) };
+    let slice = unsafe { std::slice::from_raw_parts(ptr, len) };
 
     slice
 }
