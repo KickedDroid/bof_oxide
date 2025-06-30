@@ -1,17 +1,15 @@
 #![no_main]
+#![no_std]
 #![allow(non_upper_case_globals)]
-use std::ffi::c_char;
-use std::ffi::c_int;
-use std::ffi::c_void;
-use std::i128;
 mod rust_bof;
+use core::ffi::{c_char, c_int};
 use rust_bof::rust_bof;
 mod beacon;
 mod data;
 use beacon::*;
 use data::Data;
 #[repr(C, align(8))]
-struct FormatP {
+pub struct FormatP {
     original: *mut c_char,
     buffer: *mut c_char,
     length: c_int,
@@ -20,7 +18,7 @@ struct FormatP {
 
 // This is the Entrypoint for the Rust portion
 // Initialize and call rust_bof
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn initialize(
     beacon_output: BeaconOutputFn,
     beacon_printf: BeaconPrintfFn,
@@ -85,8 +83,8 @@ pub unsafe extern "C" fn initialize(
     drop(beacon);
 }
 
-/* #[panic_handler]
-#[no_mangle]
-fn panic(_: &std::panic::PanicInfo) -> ! {
+#[panic_handler]
+#[unsafe(no_mangle)]
+fn panic(_: &core::panic::PanicInfo) -> ! {
     loop {}
-} */
+} 

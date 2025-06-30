@@ -1,0 +1,22 @@
+[package]
+name = "bof_oxide"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+
+
+
+[features]
+default = ["data", "format"]
+data = []
+format = []
+process_injection = []
+
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+panic = "abort"

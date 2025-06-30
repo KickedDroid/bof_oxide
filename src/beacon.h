@@ -6,7 +6,7 @@
 extern "C" {
 #endif // __cplusplus
 
-#ifdef DATA
+
 /* data API */
 typedef struct {
 	char * original; /* the original buffer [so we can free it] */
@@ -21,7 +21,7 @@ DECLSPEC_IMPORT int     BeaconDataInt(datap * parser);
 DECLSPEC_IMPORT short   BeaconDataShort(datap * parser);
 DECLSPEC_IMPORT int     BeaconDataLength(datap * parser);
 DECLSPEC_IMPORT char *  BeaconDataExtract(datap * parser, int * size);
-#endif
+
 /* format API */
 typedef struct {
 	char * original; /* the original buffer [so we can free it] */

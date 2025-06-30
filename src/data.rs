@@ -1,15 +1,6 @@
-use c_int;
-use BeaconDataExtractFn;
-use BeaconDataIntFn;
-use BeaconDataLengthFn;
-use BeaconDataParseFn;
-use BeaconDataShortFn;
-use BeaconFormatAllocFn;
-use BeaconFormatFreeFn;
-use FormatP;
-use DataP;
-use c_char;
-use std::ptr;
+use core::ffi::{c_char, c_int};
+
+use crate::{BeaconDataExtractFn, BeaconDataIntFn, BeaconDataLengthFn, BeaconDataParseFn, BeaconDataShortFn, BeaconFormatAllocFn, BeaconFormatFreeFn, DataP, FormatP};
 
 
 pub struct Data {
@@ -39,14 +30,14 @@ impl Data {
         alen: c_int,
     ) -> Self {
         let mut buffer = FormatP {
-            original: std::ptr::null_mut(),
-            buffer: std::ptr::null_mut(),
+            original: core::ptr::null_mut(),
+            buffer: core::ptr::null_mut(),
             length: 0,
             size: 0,
         };
         let mut parser = DataP {
-            original: std::ptr::null_mut(),
-            buffer: std::ptr::null_mut(),
+            original: core::ptr::null_mut(),
+            buffer: core::ptr::null_mut(),
             length: 0,
             size: 0,
         };
@@ -91,8 +82,8 @@ impl Data {
 
     pub fn extract_int(&mut self) -> c_int {
         let mut parser = DataP {
-            original: std::ptr::null_mut(),
-            buffer: std::ptr::null_mut(),
+            original: core::ptr::null_mut(),
+            buffer: core::ptr::null_mut(),
             length: 0,
             size: 0,
         };
@@ -124,7 +115,7 @@ pub fn c_char_to_u8(ptr: *const u8) -> &'static [u8] {
     let len = unsafe { c_strlen(ptr as *const i8) };
 
     // Read the string from the pointer
-    let slice = unsafe { std::slice::from_raw_parts(ptr, len) };
+    let slice = unsafe { core::slice::from_raw_parts(ptr, len) };
 
     slice
 }

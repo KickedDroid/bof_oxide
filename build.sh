@@ -1,34 +1,20 @@
 #!/bin/bash
-if [ ! -d "objects" ]; then
-    mkdir objects
-fi
 
+rm -rf objects/ ;
 
-FEATURES=""
-C_FEATURES="-DDATA"
-# Add features based on args
-for feature in "$@"; do
-  FEATURES="$FEATURES --cfg feature=\"$feature\""
-done
+mkdir objects ;
 
-echo $C_FEATURES
-
-RUSTFLAGS="-C target-cpu=x86-64 -C target-feature=+crt-static -C link-arg=-nostartfiles -C link-arg=-nodefaultlibs -C link-arg=-Wl,--gc-sections" \
-rustc --target x86_64-pc-windows-gnu \
+RUSTFLAGS="-C target-cpu=x86-64 -C target-feature=+crt-static -C link-arg=-nostartfiles -C link-arg=-nodefaultlibs -C link-arg=-Wl,--gc-sections";
+cargo rustc -- --target x86_64-pc-windows-gnu \
     -C opt-level=z \
     -C panic=abort \
     -C debuginfo=0 \
     -C strip=symbols \
     -C codegen-units=1 \
     -C embed-bitcode=no \
-    $FEATURES \
-    --emit=obj \
-    src/lib.rs -o objects/rust_part.o
-
-x86_64-w64-mingw32-gcc -c -DOUTPUT -DFORMAT $C_FEATURES src/entry.c -o objects/c_part.o
-
-x86_64-w64-mingw32-ld -r objects/rust_part.o objects/c_part.o -o objects/combined.o
-
+    --emit=obj -o objects/rust_part.o ;
+x86_64-w64-mingw32-gcc -c -DOUTPUT -DFORMAT $C_FEATURES src/entry.c -o objects/c_part.o ; 
+x86_64-w64-mingw32-ld -r objects/rust_part-*.o objects/c_part.o -o objects/combined.o ;
 
 x86_64-w64-mingw32-objcopy \
     --remove-section=.drectve \
@@ -39,4 +25,3 @@ x86_64-w64-mingw32-objcopy \
     --strip-debug \
     objects/combined.o \
     bof_oxide.o
-

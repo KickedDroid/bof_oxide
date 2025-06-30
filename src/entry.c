@@ -8,10 +8,9 @@ extern void initialize(
     void (*beacon_printf)(int, const char * fmt, ...),
     #endif
     
-    #ifdef FORMAT 
     void (*beacon_format_alloc)(formatp*, int),
     void (*beacon_format_free)(formatp*),
-    #endif
+
     #ifdef PROCESS_INJECTION
     void (*beacon_get_spawn_to)(BOOL, char*, int),
     void (*beacon_inject_process)(HANDLE, int, char*, int, int, char*, int),
@@ -19,13 +18,12 @@ extern void initialize(
     void (*beacon_cleanup_process)(PROCESS_INFORMATION*),
     #endif
 
-    #ifdef DATA
+
     void (*beacon_data_parse)(datap*, char*, int),
     int (*beacon_data_int)(datap*),
     short (*beacon_data_short)(datap*),
     int (*beacon_data_length)(datap*),
     char* (*beacon_data_extract)(datap*, int*),
-    #endif
     
     char* args, 
     int alen
@@ -34,15 +32,11 @@ extern void initialize(
 void go(char* args, int alen) {
     // Pass the fn pointers to the rust wrapper
     initialize(
-        #ifdef OUT
         BeaconOutput, 
         BeaconPrintf,
-        #endif 
         
-        #ifdef FORMAT
         BeaconFormatAlloc, 
         BeaconFormatFree, 
-        #endif
 
         #ifdef PROCESS_INJECTION
         BeaconGetSpawnTo,
@@ -51,13 +45,11 @@ void go(char* args, int alen) {
         BeaconCleanupProcess,
         #endif
 
-        #ifdef DATA
         BeaconDataParse,
         BeaconDataInt,
         BeaconDataShort,
         BeaconDataLength,
         BeaconDataExtract,
-        #endif
         args,
         alen
     );
