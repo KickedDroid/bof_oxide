@@ -27,19 +27,3 @@ pub fn rust_bof(beacon: &mut Beacon, data: &mut Data) {
         "[+] Rust BOF Completed successfully",
     );
 }
-
-fn peb() -> u64 {
-    let rax:u64;
-    unsafe {
-        asm!(
-            "push rbx",
-            "xor rbx, rbx",
-            "xor rax, rax",
-            "mov rbx, qword ptr gs:[0x60]",
-            "mov rax,rbx",
-            "pop rbx",
-            out("rax") rax,
-        );
-    }
-    rax
-}
