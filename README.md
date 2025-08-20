@@ -7,24 +7,7 @@ Goals:
 - Make Debugging BOFs less of a pain.
 - Better Error Handling 
 
-TODO: 
-- Full Beacon API Support
-- Dynamic Beacon API fn names ( Compile time )
-
- 
-### Build
-```
-# Include the Basic BeaconFormat funcs
-./gen.py format
-
-# BeaconData funcs
-./gen.py data
-
-# Using all features
-./gen.py data process_injection format
-```
-
-
+This project was fun but ran into limitations with what I wanted. I learned a lot of lessons of which I will write a post about soon. Until then check out my repository loadstar.
 
 # Usage Example
 
