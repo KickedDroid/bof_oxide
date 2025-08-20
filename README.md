@@ -1,19 +1,30 @@
 # bof_oxide
 
-A POC or Template whatever for developing BOFs for Sliver, Havoc, Cobalt Strike or most COFFLoaders. 
+A POC or Template whatever for developing BOFs for Sliver, Havoc, Cobalt Strike or most COFFLoaders.
 
 Goals:
 - Less Volitile BOFs
 - Make Debugging BOFs less of a pain.
-- Better Error Handling 
+- Better Error Handling
 
+<<<<<<< Updated upstream
 This project was fun but ran into limitations with what I wanted. I learned a lot of lessons of which I will write a post about soon. Until then check out my repository loadstar.
+=======
+This project has been fun.
+
+### Build
+```
+just bof
+```
+
+
+>>>>>>> Stashed changes
 
 # Usage Example
 
 ```rust
 pub fn rust_bof(beacon: &mut Beacon, data: &mut Data) {
-    
+
     let str_arg = data.extract_str();
     if str_arg.is_null() {
         beacon.output(
@@ -23,9 +34,9 @@ pub fn rust_bof(beacon: &mut Beacon, data: &mut Data) {
         return;
     }
     data.free();
-    
+
     beacon.printf("Hello %s from rust-bof\0", str_arg);
-    
+
     beacon.output(
         BeaconOutputType::Standard,
         "[+] Rust BOF Completed successfully",
@@ -55,10 +66,10 @@ Running in Sliver
 
 
 ### How it works
-This is just a wrapper around the existing Beacon Fns provided. The difference is we pass the function pointers to a Rust wrapper. 
+This is just a wrapper around the existing Beacon Fns provided. The difference is we pass the function pointers to a Rust wrapper.
 
 ```
-C -> Rust -> BeaconApi 
+C -> Rust -> BeaconApi
 ```
 The bof entry point is still `go` and it's still handled in C.
 
@@ -135,10 +146,10 @@ AUX scnlen 0x1d nreloc 0 nlnno 0
 [ 22](sec  0)(fl 0x00)(ty    0)(scl   2) (nx 0) 0x0000000000000000 __imp_BeaconFormatAlloc
 ```
 ---
-### References 
+### References
 
 Header file `beacon.h` from https://github.com/Cobalt-Strike/bof_template/blob/main/beacon.h
 
 
 ### FAFO License
-This is striclty for educational and research purposes. I'm not responsible for any use of this, by any means. Use at you're own risk and find out. NOTE: This probs will get you picked up immediately so good luck. 
+This is striclty for educational and research purposes. I'm not responsible for any use of this, by any means. Use at you're own risk and find out. NOTE: This probs will get you picked up immediately so good luck.
