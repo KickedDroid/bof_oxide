@@ -8,8 +8,11 @@ Goals:
 - Better Error Handling
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 This project was fun but ran into limitations with what I wanted. I learned a lot of lessons of which I will write a post about soon. Until then check out my repository loadstar.
 =======
+=======
+>>>>>>> Stashed changes
 This project has been fun.
 
 ### Build
