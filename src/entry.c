@@ -3,11 +3,8 @@
 
 // Extern Rust initialize fn
 extern void initialize(
-    #ifdef OUT
     void (*beacon_output)(int, const char *, int),
     void (*beacon_printf)(int, const char * fmt, ...),
-    #endif
-
 
     char* args,
     int alen

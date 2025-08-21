@@ -1,12 +1,11 @@
 #![no_main]
 #![no_std]
 #![allow(non_upper_case_globals)]
-mod rust_bof;
 mod beacon;
-use rust_bof::rust_bof;
-use beacon::{BeaconOutputFn, BeaconPrintfFn, Beacon};
+mod rust_bof;
+use beacon::{Beacon, BeaconOutputFn, BeaconPrintfFn};
 use core::ffi::{c_char, c_int};
-
+use rust_bof::rust_bof;
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn initialize(
@@ -17,7 +16,7 @@ pub unsafe extern "C" fn initialize(
     args: *mut c_char,
     alen: c_int,
 ) {
-    let beacon = Beacon::new(beacon_output, beacon_printf, args, alen);
+    let mut beacon = Beacon::new(beacon_output, beacon_printf, args, alen);
     rust_bof(beacon);
 }
 

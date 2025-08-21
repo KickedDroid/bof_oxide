@@ -2,7 +2,6 @@ use core::ffi::{c_char, c_int, c_short, c_void};
 pub type BeaconOutputFn = extern "C" fn(i32, *const c_char, i32);
 pub type BeaconPrintfFn = extern "C" fn(i32, *const c_char, *mut c_char);
 
-
 pub struct Beacon {
     pub format: FormatP,
     pub data: DataP,
@@ -11,8 +10,14 @@ pub struct Beacon {
     pub args: *const c_char,
     pub alen: c_int,
 }
+
 impl Beacon {
-    pub fn new(output: BeaconOutputFn, printf: BeaconPrintfFn, args: *const c_char, alen: c_int) -> Self {
+    pub fn new(
+        output: BeaconOutputFn,
+        printf: BeaconPrintfFn,
+        args: *const c_char,
+        alen: c_int,
+    ) -> Self {
         let mut beacon = Beacon {
             format: FormatP::new(),
             data: DataP::new(),
@@ -26,10 +31,9 @@ impl Beacon {
     }
 
     pub fn output(&mut self, data: &str) {
-        unsafe {(self.output_addr)(0, data.as_ptr() as *const c_char, data.len() as i32)};
+        unsafe { (self.output_addr)(0, data.as_ptr() as *const c_char, data.len() as i32) };
     }
 }
-
 
 #[repr(C, align(8))]
 pub struct FormatP {
