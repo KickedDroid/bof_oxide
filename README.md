@@ -10,6 +10,12 @@ Goals:
 This project was fun but ran into limitations with what I wanted. I learned a lot of lessons of which I will write a post about soon. [Here](https://kickeddroid.github.io/2025/08/22/What-I-Learned-writing-a-bof-in-rust.html) Until then check out my repository [loadstar](https://github.com/KickedDroid/loadstar).
 
 ### Build
+
+Create objects directory 
+```
+mkdir objects
+```
+Run justfile
 ```
 just bof
 ```
