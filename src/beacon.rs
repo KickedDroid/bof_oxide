@@ -41,9 +41,17 @@ impl Beacon {
     }
 
     pub fn output(&mut self, data: &str) {
-        unsafe { (self.output_addr)(0, data.as_ptr() as *const c_char, data.len() as i32) };
+        unsafe {
+            (self.output_addr)(0, data.as_ptr() as *const c_char, data.len() as i32);
+            (self.output_addr)(0, core::ptr::null_mut() as *const c_char, 0 as i32)
+        };
     }
 
+    pub fn printf(&mut self, str: &str, arg: *mut c_char) {
+        unsafe {
+            (self.printf_addr)(0, str.as_ptr() as *const c_char, arg as *mut c_char);
+        }
+    }
     pub fn get_arg(&mut self) -> *mut c_char {
         unsafe { (self.data_extract)(&mut self.data, 0 as c_int) }
     }
